@@ -8,7 +8,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteStatement;
+
 
 public class DataHelper {
 	private static final String DATABASE_NAME = "drmurphy.db";
@@ -227,43 +227,65 @@ public class DataHelper {
 		String id = "" +id_key;
 		ContentValues values = new ContentValues();
 		values.put("difficulty", difficulty);
-		db.update("difficulty", values, "_id=?", new String[]{id});
+		db.update("hikes", values, "_id=?", new String[]{id});
 	}
 	
 	public void updateGPS(int id_key, String GPS){
 		String id = "" +id_key;
 		ContentValues values = new ContentValues();
 		values.put("GPS", GPS);
-		db.update(GPS, values, "_id=?", new String[]{id});
+		db.update("hikes", values, "_id=?", new String[]{id});
 	}
 	
-	public void add_appt_hikers(String hike_name, String date, String start_stop, String newUser){
+	public void add_appt_hikers(String hike_name, String date, String start_stop, String hikers, String newUser ){
 		ContentValues values = new ContentValues();
-		String users = "undefined";
+
+		String id = "undefined";
 		
 		Cursor cursor = db.query("hikes", null,
-				"name =?", new String[]{hike_name.toString()}, null, null, null, null);
+				"hike_name =?", new String[]{hike_name.toString()}, null, null, null, null);
 		if (cursor != null){
 			cursor.moveToFirst();
-			users = cursor.getString(4);
+			
+			
+			//This is an arbritary comment.
+			
+			
+			//Cheesy way to find the row, keeps pushing down cursor until values match
+			while(cursor.getString(2).compareTo(date)!=0 ||
+					cursor.getString(3).compareTo(start_stop)!=0 ||
+					cursor.getString(4).compareTo(hikers) != 0){
+				cursor.moveToNext();
+			}
+			
+			if (cursor != null){
+				id = cursor.getString(0);
+			}
+			
 		}
+		
+		if (cursor != null){
+			values.put("hikers", newUser);
+			db.update("appointments", values, "_id=?", new String[]{id});
+		}
+		
 	}
 	
 
-	public List<String> selectAppointments() {
-		List<String> list = new ArrayList<String>();
-		Cursor cursor = this.db.query("appointments", new String[] {"_id","patientName","date",
-		"time"}, null, null, null, null, null);
-		if (cursor.getCount() > 0) {
-			if (cursor.moveToFirst()) {
-				do {
-					list.add(cursor.getString(2)+" : " +cursor.getString(1) + " @ " + cursor.getString(3));
-					// Date: name @ time
-				} while (cursor.moveToNext());
-			}
-			if (cursor != null && !cursor.isClosed())
-				cursor.close();			
-		}
-		return list;
-	}
+//	public List<String> selectAppointments() {
+//		List<String> list = new ArrayList<String>();
+//		Cursor cursor = this.db.query("appointments", new String[] {"_id","patientName","date",
+//		"time"}, null, null, null, null, null);
+//		if (cursor.getCount() > 0) {
+//			if (cursor.moveToFirst()) {
+//				do {
+//					list.add(cursor.getString(2)+" : " +cursor.getString(1) + " @ " + cursor.getString(3));
+//					// Date: name @ time
+//				} while (cursor.moveToNext());
+//			}
+//			if (cursor != null && !cursor.isClosed())
+//				cursor.close();			
+//		}
+//		return list;
+//	}
 }
