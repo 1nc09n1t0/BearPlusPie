@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 
 public class DataHelper {
-	private static final String DATABASE_NAME = "drmurphy.db";
+	private static final String DATABASE_NAME = "Get_the_hike_outta_here.db";
 	private static final int DATABASE_VERSION = 1;
 	private Context context;
 	private SQLiteDatabase db;
