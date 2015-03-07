@@ -1,0 +1,8 @@
+INDEX VERSION 1.126+C:\Users\1nc09_000\Documents\BPie\.metadata\.plugins\org.eclipse.jdt.core
+1633073728.index
+3561677842.index
+1426748860.index
+3244275608.index
+848856923.index
+1314778728.index
+2386816120.index
