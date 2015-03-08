@@ -9,6 +9,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.google.android.gms.maps.model.LatLng;
+
 
 public class DataHelper {
 	private static final String DATABASE_NAME = "Get_the_hike_outta_here.db";
@@ -19,7 +21,7 @@ public class DataHelper {
 	
 	 //declare your tables
 
-	//Patients Table
+	//Hikes Table
 	static String createHikesTable = "create table hikes ("+
 			"_id INTEGER PRIMARY KEY AUTOINCREMENT,"+
 			"name_of_hike TEXT,"+
@@ -143,15 +145,15 @@ public class DataHelper {
 		
 		db.delete("patients", "_id=?", new String[] { id });
 		
-		Cursor cursor_apptsDB = db.query("appointments", null, "patientName =?", new String[]{prevName.toString()}, null, null, null, null);
+		Cursor cursor_apptsDB = db.query("appointments", null, "hike_name =?", new String[]{prevName.toString()}, null, null, null, null);
 		if (cursor_apptsDB != null){
-			db.delete("appointments", "patientName=?", new String[]{prevName});
+			db.delete("appointments", "hike_name =?", new String[]{prevName});
 		}
 	}
 
 	public String get_avg_time(String name_of_hike) {
 		String avg_time = "undefined";
-		Cursor cursor = db.query("patients", null, "name =?", new String[]{name_of_hike.toString()}, null, null, null, null);
+		Cursor cursor = db.query("hikes", null, "name_of_hike =?", new String[]{name_of_hike.toString()}, null, null, null, null);
 		if (cursor != null){
 			cursor.moveToFirst();
 			avg_time = cursor.getString(2);
@@ -161,7 +163,7 @@ public class DataHelper {
 	
 	public String get_difficulty(String name_of_hike){
 		String difficulty = "undefined";
-		Cursor cursor = db.query("hikes", null, "name =?", new String[]{name_of_hike.toString()}, null, null, null, null);
+		Cursor cursor = db.query("hikes", null, "name_of_hike =?", new String[]{name_of_hike.toString()}, null, null, null, null);
 		if (cursor != null){
 			cursor.moveToFirst();
 			difficulty = cursor.getString(3);
@@ -169,19 +171,26 @@ public class DataHelper {
 		return difficulty;
 	}
 	
-	public String get_GPS(String name_of_hike){
+	public LatLng get_GPS(String name_of_hike){
 		String GPS = "undefined";
-		Cursor cursor = db.query("hikes", null, "name =?", new String[]{name_of_hike.toString()}, null, null, null, null);
+		double latitude;
+		double longitude;
+		
+		Cursor cursor = db.query("hikes", null, "name_of_hike =?", new String[]{name_of_hike}, null, null, null, null);
 		if (cursor != null){
 			cursor.moveToFirst();
-			GPS = cursor.getString(4);
+			GPS = cursor.getString(3);
 		}
-		return GPS;
+		longitude = Double.parseDouble(GPS.substring(0, GPS.indexOf(",")));
+		GPS = GPS.substring(GPS.indexOf(",")+2);
+		latitude = Double.parseDouble(GPS);
+//		GPS = cursor.getColumnName(0) + cursor.getPosition();
+		return new LatLng(latitude, longitude);
 	}
 	
 	public int getID(String name_of_hike) {
 		int id_key=-99;	//If you get this, something went wrong
-		Cursor cursor = db.query("hikes", null, "name =?", new String[]{name_of_hike.toString()}, null, null, null, null);
+		Cursor cursor = db.query("hikes", null, "name_of_hike =?", new String[]{name_of_hike.toString()}, null, null, null, null);
 		if (cursor != null){
 			cursor.moveToFirst();
 			id_key = cursor.getInt(0);
@@ -207,11 +216,11 @@ public class DataHelper {
 		db.update("patients", values_hikes_table, "_id=?", new String[]{id});
 		
 		//This updates the hike_name in table appointments
-		Cursor cursor_appts_table = db.query("appointments", null, "patientName =?", new String[]{prevName.toString()}, null, null, null, null);
+		Cursor cursor_appts_table = db.query("appointments", null, "hike_name =?", new String[]{prevName.toString()}, null, null, null, null);
 		if (cursor_appts_table != null){
 			ContentValues values_apptsDB = new ContentValues();
 			values_apptsDB.put("hike_name", name_of_hike);
-			db.update("appointments", values_apptsDB, "patientName=?", new String[]{prevName});
+			db.update("appointments", values_apptsDB, "hike_name=?", new String[]{prevName});
 		}
 		
 	}
@@ -294,19 +303,19 @@ public class DataHelper {
 			
 			current = web.substring(0, web.indexOf("\n"));
 			web = web.substring(web.indexOf("\n")+1);
-			GPS = current;
+			GPS = current+", ";
 			current = web.substring(0, web.indexOf("\n"));
 			web = web.substring(web.indexOf("\n")+1);
 			GPS += current;
 			
 			//insert into hikes
 	
-//			ContentValues cv = new ContentValues();
-//			cv.put("hike_name", hike_name);
-//			cv.put("date", newAppointment.getDate());
-//			cv.put("time", newAppointment.getTime());
-//			db.insert("appointments", null, cv);
-
+			ContentValues cv = new ContentValues();
+			cv.put("name_of_hike", hike_name);
+			cv.put("avg_time", "1 hour");
+			cv.put("GPS", GPS);
+			cv.put("difficulty", "moderate");
+			db.insert("hikes", null, cv);
 			
 		}
 		

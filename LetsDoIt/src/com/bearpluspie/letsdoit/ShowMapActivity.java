@@ -1,22 +1,12 @@
 package com.bearpluspie.letsdoit;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,12 +25,13 @@ public class ShowMapActivity extends Activity{
 	private GoogleMap map;
 	static final LatLng TUCSON = new LatLng(32.221743, -110.926479);
 	static final LatLng PHOENIX = new LatLng(33.448377, -112.074037);
-	private DataHelper db = new DataHelper(getApplicationContext());
+	private DataHelper db;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_map_layout);
+		db = new DataHelper(this);
 		
 		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
 		
@@ -117,7 +108,7 @@ public class ShowMapActivity extends Activity{
 			
 			db.getOnlineDB(web_get);
 			
-			Toast toast = Toast.makeText(getApplicationContext(), web_get, Toast.LENGTH_LONG);
+			Toast toast = Toast.makeText(getApplicationContext(), "Hell Cavern: \n " + db.get_GPS("Hell Cavern")+ "\n", Toast.LENGTH_LONG);
             toast.show();
 		}
 
@@ -129,16 +120,11 @@ public class ShowMapActivity extends Activity{
                         new InputStreamReader(text.openStream()));
 
                         String inputLine;
-                        
                         web_get = "";
-                        
                         while ((inputLine = in.readLine()) != null)
                             web_get += inputLine + "\n";
                         in.close();
                         
-                        
-                        
-           
             } catch (Exception e) {
             	web_get = "Error in network call";
                 Log.e("Net", "Error in network call", e);
