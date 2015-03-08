@@ -1,10 +1,13 @@
 package com.bearpluspie.letsdoit;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Iterator;
+import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -17,6 +20,10 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,15 +34,19 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class ShowMapActivity extends Activity{
+public class ShowMapActivity extends Activity implements OnMyLocationChangeListener{
 	private GoogleMap map;
 	static final LatLng TUCSON = new LatLng(32.221743, -110.926479);
 	static final LatLng PHOENIX = new LatLng(33.448377, -112.074037);
-
+	private Circle myCircle;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -44,6 +55,11 @@ public class ShowMapActivity extends Activity{
 		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
 		
 		if(map != null){
+			map.setMyLocationEnabled(true);
+			map.setOnMyLocationChangeListener(this);
+			map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+			map.setOnMyLocationChangeListener(this);
+			
 			/*Marker Tucson = */map.addMarker(new MarkerOptions()
 			.position(TUCSON)
 			.title("Tucson")
@@ -56,11 +72,27 @@ public class ShowMapActivity extends Activity{
 					.fromResource(R.drawable.ic_launcher))*/);
 			
 			//including some animation
-			//Move the camera instantly to Tucson with a zoom of 15.
-			map.moveCamera(CameraUpdateFactory.newLatLngZoom(TUCSON, 15));
+			//Move the camera instantly to AZ
+			double lat1 = 0f;
+			double long1 = 0f;
+			Geocoder coder = new Geocoder(getApplicationContext());
+			List<Address> geocodeResults;
+			try {
+				geocodeResults = coder.getFromLocationName("Arizona", 1);
+				Iterator<Address> locations = geocodeResults.iterator();
+				while (locations.hasNext()) {
+	    			Address loc = locations.next();
+	    			lat1 = loc.getLatitude();
+	    			long1 = loc.getLongitude();
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat1, long1), 0));
 
 			// Zoom in, animating the camera.
-			map.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+//			map.animateCamera(CameraUpdateFactory.zoomTo(10), 200, null);
 		}
 		/*
 		 * for all rows in the db,
@@ -150,6 +182,27 @@ public class ShowMapActivity extends Activity{
             }
 			
 		}
+	}
+
+	@Override
+	public void onMyLocationChange(Location location) {
+		LatLng locLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+		double accuracy = location.getAccuracy();
+
+		if (myCircle == null) {
+			CircleOptions circleOptions = new CircleOptions().center(locLatLng)
+					// set center
+					.radius(accuracy)
+					// set radius in meters
+					.strokeColor(Color.BLACK)
+					.strokeWidth(5);
+
+			myCircle = map.addCircle(circleOptions);
+		} else {
+			myCircle.setCenter(locLatLng);
+			myCircle.setRadius(accuracy);
+		}
+		map.animateCamera(CameraUpdateFactory.newLatLng(locLatLng));
 	}
 	
 	
