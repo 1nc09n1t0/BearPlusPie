@@ -1,18 +1,34 @@
 package com.bearpluspie.letsdoit;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class ShowMapActivity extends Activity{
@@ -71,7 +87,69 @@ public class ShowMapActivity extends Activity{
 			startActivity(new Intent(getApplicationContext(), MainActivity.class));
 		else if(id == R.id.showList)
 			startActivity(new Intent(getApplicationContext(), AllHikesList.class));
+		else if(id == R.id.getTest){
+	       	 new TextDownloader().execute("http://52.10.206.133/maps.txt");
+		}
+		
 		return true;
+	}
+	
+	private class TextDownloader extends AsyncTask <String, Void, Bitmap>{		
+		
+		String web_get = "undefined";
+		
+		@Override
+		protected Bitmap doInBackground(String... params) {
+			downloadString();
+			return null;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			Log.i("Async-Example", "onPreExecute Called");
+		}
+
+		@Override
+		protected void onPostExecute(Bitmap result) {
+			Log.i("Async-Example", "onPostExecute Called");
+			Toast toast = Toast.makeText(getApplicationContext(), web_get, Toast.LENGTH_LONG);
+            toast.show();
+		}
+
+		private void downloadString() {
+			try {
+            	URL text = new URL("http://52.10.206.133/maps.txt");
+//                HttpURLConnection http= (HttpURLConnection) text.openConnection();
+//                
+                             
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(text.openStream()));
+
+                        String inputLine;
+                        
+                        web_get = "";
+                        
+                        while ((inputLine = in.readLine()) != null)
+                            web_get += inputLine;
+                        in.close();
+               
+//                InputStream IS = http.getInputStream();
+//                StringBuffer SB = new StringBuffer();
+//                int data;
+//                
+//                while((data = IS.read()) != -1) {
+//                     SB.append((char) data);
+//                }
+// 
+//                IS.close();
+//                http.disconnect();
+                
+            } catch (Exception e) {
+            	web_get = "Error in network call";
+                Log.e("Net", "Error in network call", e);
+            }
+			
+		}
 	}
 	
 	
