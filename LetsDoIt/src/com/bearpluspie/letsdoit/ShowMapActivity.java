@@ -35,6 +35,7 @@ public class ShowMapActivity extends Activity{
 	private GoogleMap map;
 	static final LatLng TUCSON = new LatLng(32.221743, -110.926479);
 	static final LatLng PHOENIX = new LatLng(33.448377, -112.074037);
+	private DataHelper db = new DataHelper(getApplicationContext());
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +88,7 @@ public class ShowMapActivity extends Activity{
 			startActivity(new Intent(getApplicationContext(), MainActivity.class));
 		else if(id == R.id.showList)
 			startActivity(new Intent(getApplicationContext(), AllHikesList.class));
-		else if(id == R.id.getTest){
+		else if(id == R.id.updateDB){
 	       	 new TextDownloader().execute("http://52.10.206.133/maps.txt");
 		}
 		
@@ -97,6 +98,7 @@ public class ShowMapActivity extends Activity{
 	private class TextDownloader extends AsyncTask <String, Void, Bitmap>{		
 		
 		String web_get = "undefined";
+		
 		
 		@Override
 		protected Bitmap doInBackground(String... params) {
@@ -112,6 +114,9 @@ public class ShowMapActivity extends Activity{
 		@Override
 		protected void onPostExecute(Bitmap result) {
 			Log.i("Async-Example", "onPostExecute Called");
+			
+			db.getOnlineDB(web_get);
+			
 			Toast toast = Toast.makeText(getApplicationContext(), web_get, Toast.LENGTH_LONG);
             toast.show();
 		}
@@ -119,9 +124,7 @@ public class ShowMapActivity extends Activity{
 		private void downloadString() {
 			try {
             	URL text = new URL("http://52.10.206.133/maps.txt");
-//                HttpURLConnection http= (HttpURLConnection) text.openConnection();
-//                
-                             
+      
                 BufferedReader in = new BufferedReader(
                         new InputStreamReader(text.openStream()));
 
@@ -132,25 +135,15 @@ public class ShowMapActivity extends Activity{
                         while ((inputLine = in.readLine()) != null)
                             web_get += inputLine + "\n";
                         in.close();
-               
-//                InputStream IS = http.getInputStream();
-//                StringBuffer SB = new StringBuffer();
-//                int data;
-//                
-//                while((data = IS.read()) != -1) {
-//                     SB.append((char) data);
-//                }
-// 
-//                IS.close();
-//                http.disconnect();
-                
+                        
+                        
+                        
+           
             } catch (Exception e) {
             	web_get = "Error in network call";
                 Log.e("Net", "Error in network call", e);
             }
-			
 		}
 	}
-	
 	
 }

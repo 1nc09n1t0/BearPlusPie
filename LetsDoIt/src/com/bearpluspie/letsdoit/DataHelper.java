@@ -271,23 +271,6 @@ public class DataHelper {
 		
 	}
 	
-
-//	public List<String> selectAppointments() {
-//		List<String> list = new ArrayList<String>();
-//		Cursor cursor = this.db.query("appointments", new String[] {"_id","patientName","date",
-//		"time"}, null, null, null, null, null);
-//		if (cursor.getCount() > 0) {
-//			if (cursor.moveToFirst()) {
-//				do {
-//					list.add(cursor.getString(2)+" : " +cursor.getString(1) + " @ " + cursor.getString(3));
-//					// Date: name @ time
-//				} while (cursor.moveToNext());
-//			}
-//			if (cursor != null && !cursor.isClosed())
-//				cursor.close();			
-//		}
-//		return list;
-//	}
 	
 	public List<String> selectHikesDummy(){
 		List<String> list = new ArrayList<String>();
@@ -295,5 +278,37 @@ public class DataHelper {
 		list.add("Phoenix Hike");
 		list.add("Flagstaff Hike");
 		return list;
+	}
+
+	public void getOnlineDB(String web_get) {
+		String web = web_get;
+		
+		while (web.indexOf("\n")!=-1){
+			
+			String hike_name;
+			String GPS;
+
+			String current = web.substring(0, web.indexOf("\n"));
+			web = web.substring(web.indexOf("\n")+1);
+			hike_name = current;
+			
+			current = web.substring(0, web.indexOf("\n"));
+			web = web.substring(web.indexOf("\n")+1);
+			GPS = current;
+			current = web.substring(0, web.indexOf("\n"));
+			web = web.substring(web.indexOf("\n")+1);
+			GPS += current;
+			
+			//insert into hikes
+	
+//			ContentValues cv = new ContentValues();
+//			cv.put("hike_name", hike_name);
+//			cv.put("date", newAppointment.getDate());
+//			cv.put("time", newAppointment.getTime());
+//			db.insert("appointments", null, cv);
+
+			
+		}
+		
 	}
 }

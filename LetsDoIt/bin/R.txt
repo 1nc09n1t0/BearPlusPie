@@ -107,7 +107,6 @@ int id buy_now 0x7f0b0011
 int id buy_with_google 0x7f0b0012
 int id classic 0x7f0b0014
 int id donate_with_google 0x7f0b0013
-int id getTest 0x7f0b001c
 int id grayscale 0x7f0b0015
 int id holo_dark 0x7f0b0007
 int id holo_light 0x7f0b0008
@@ -125,6 +124,7 @@ int id showList 0x7f0b001b
 int id showMap 0x7f0b0018
 int id strict_sandbox 0x7f0b000b
 int id terrain 0x7f0b0006
+int id updateDB 0x7f0b001c
 int id wrap_content 0x7f0b000f
 int integer google_play_services_version 0x7f080000
 int layout activity_main 0x7f030000

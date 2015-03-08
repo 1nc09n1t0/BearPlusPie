@@ -474,7 +474,6 @@ containing a value of this type.
         public static final int buy_with_google=0x7f0b0012;
         public static final int classic=0x7f0b0014;
         public static final int donate_with_google=0x7f0b0013;
-        public static final int getTest=0x7f0b001c;
         public static final int grayscale=0x7f0b0015;
         public static final int holo_dark=0x7f0b0007;
         public static final int holo_light=0x7f0b0008;
@@ -492,6 +491,7 @@ containing a value of this type.
         public static final int showMap=0x7f0b0018;
         public static final int strict_sandbox=0x7f0b000b;
         public static final int terrain=0x7f0b0006;
+        public static final int updateDB=0x7f0b001c;
         public static final int wrap_content=0x7f0b000f;
     }
     public static final class integer {
