@@ -2,7 +2,6 @@ package com.bearpluspie.letsdoit;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Iterator;
@@ -11,7 +10,6 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
@@ -83,10 +81,10 @@ public class ShowMapActivity extends Activity implements OnMyLocationChangeListe
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat1, long1), 0));
+			map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat1, long1), 10));
 
 			// Zoom in, animating the camera.
-//			map.animateCamera(CameraUpdateFactory.zoomTo(10), 200, null);
+			map.animateCamera(CameraUpdateFactory.zoomTo(6), 2000, null);
 		}
 		/*
 		 * for all rows in the db,
@@ -184,7 +182,7 @@ public class ShowMapActivity extends Activity implements OnMyLocationChangeListe
 			myCircle.setCenter(locLatLng);
 			myCircle.setRadius(accuracy);
 		}
-		map.animateCamera(CameraUpdateFactory.newLatLng(locLatLng));
+//		map.animateCamera(CameraUpdateFactory.newLatLng(locLatLng));
 	}
 	
 }
