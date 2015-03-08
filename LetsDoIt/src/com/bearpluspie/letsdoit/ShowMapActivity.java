@@ -93,6 +93,18 @@ public class ShowMapActivity extends Activity implements OnMyLocationChangeListe
 		 * 		.title(name)
 		 * 		.snippet(description);
 		 */
+		
+		new TextDownloader().execute("http://52.10.206.133/maps.txt");
+		
+		List<String> hikeList = db.selectAllHikes();
+		for (String hike : hikeList){
+			map.addMarker(new MarkerOptions()
+			.position(db.get_GPS(hike))
+			.title(hike)
+			.snippet("This is a hike."));
+		
+		}
+		
 	}
 
 	@Override
@@ -113,6 +125,16 @@ public class ShowMapActivity extends Activity implements OnMyLocationChangeListe
 			startActivity(new Intent(getApplicationContext(), AllHikesList.class));
 		else if(id == R.id.updateDB){
 	       	 new TextDownloader().execute("http://52.10.206.133/maps.txt");
+	       	 
+	       	List<String> hikeList = db.selectAllHikes();
+			for (String hike : hikeList){
+				map.addMarker(new MarkerOptions()
+				.position(db.get_GPS(hike))
+				.title(hike)
+				.snippet("This is a hike."));
+			
+			}
+	       	 
 		}
 		
 		return true;
@@ -139,9 +161,6 @@ public class ShowMapActivity extends Activity implements OnMyLocationChangeListe
 			Log.i("Async-Example", "onPostExecute Called");
 			
 			db.getOnlineDB(web_get);
-			
-			Toast toast = Toast.makeText(getApplicationContext(), "Hell Cavern: \n " + db.get_GPS("Hell Cavern")+ "\n", Toast.LENGTH_LONG);
-            toast.show();
 		}
 
 		private void downloadString() {
