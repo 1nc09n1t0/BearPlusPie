@@ -4,19 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -46,11 +38,13 @@ public class ShowMapActivity extends Activity implements OnMyLocationChangeListe
 	static final LatLng TUCSON = new LatLng(32.221743, -110.926479);
 	static final LatLng PHOENIX = new LatLng(33.448377, -112.074037);
 	private Circle myCircle;
-	
+	private DataHelper db;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_map_layout);
+		db = new DataHelper(this);
 		
 		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
 		
@@ -119,7 +113,7 @@ public class ShowMapActivity extends Activity implements OnMyLocationChangeListe
 			startActivity(new Intent(getApplicationContext(), MainActivity.class));
 		else if(id == R.id.showList)
 			startActivity(new Intent(getApplicationContext(), AllHikesList.class));
-		else if(id == R.id.getTest){
+		else if(id == R.id.updateDB){
 	       	 new TextDownloader().execute("http://52.10.206.133/maps.txt");
 		}
 		
@@ -129,6 +123,7 @@ public class ShowMapActivity extends Activity implements OnMyLocationChangeListe
 	private class TextDownloader extends AsyncTask <String, Void, Bitmap>{		
 		
 		String web_get = "undefined";
+		
 		
 		@Override
 		protected Bitmap doInBackground(String... params) {
@@ -144,43 +139,30 @@ public class ShowMapActivity extends Activity implements OnMyLocationChangeListe
 		@Override
 		protected void onPostExecute(Bitmap result) {
 			Log.i("Async-Example", "onPostExecute Called");
-			Toast toast = Toast.makeText(getApplicationContext(), web_get, Toast.LENGTH_LONG);
+			
+			db.getOnlineDB(web_get);
+			
+			Toast toast = Toast.makeText(getApplicationContext(), "Hell Cavern: \n " + db.get_GPS("Hell Cavern")+ "\n", Toast.LENGTH_LONG);
             toast.show();
 		}
 
 		private void downloadString() {
 			try {
             	URL text = new URL("http://52.10.206.133/maps.txt");
-//                HttpURLConnection http= (HttpURLConnection) text.openConnection();
-//                
-                             
+      
                 BufferedReader in = new BufferedReader(
                         new InputStreamReader(text.openStream()));
 
                         String inputLine;
-                        
                         web_get = "";
-                        
                         while ((inputLine = in.readLine()) != null)
                             web_get += inputLine + "\n";
                         in.close();
-               
-//                InputStream IS = http.getInputStream();
-//                StringBuffer SB = new StringBuffer();
-//                int data;
-//                
-//                while((data = IS.read()) != -1) {
-//                     SB.append((char) data);
-//                }
-// 
-//                IS.close();
-//                http.disconnect();
-                
+                        
             } catch (Exception e) {
             	web_get = "Error in network call";
                 Log.e("Net", "Error in network call", e);
             }
-			
 		}
 	}
 
@@ -204,6 +186,5 @@ public class ShowMapActivity extends Activity implements OnMyLocationChangeListe
 		}
 		map.animateCamera(CameraUpdateFactory.newLatLng(locLatLng));
 	}
-	
 	
 }

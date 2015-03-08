@@ -7,7 +7,7 @@
     <item android:id="@+id/showList"
         android:title="All Hikes" ></item>
     
-    <item android:id="@+id/getTest"
-        android:title="Get text test"></item>
+    <item android:id="@+id/updateDB"
+        android:title="Update database..."></item>
 
 </menu>
