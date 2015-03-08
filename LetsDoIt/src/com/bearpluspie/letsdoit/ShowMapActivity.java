@@ -130,7 +130,7 @@ public class ShowMapActivity extends Activity{
                         web_get = "";
                         
                         while ((inputLine = in.readLine()) != null)
-                            web_get += inputLine;
+                            web_get += inputLine + "\n";
                         in.close();
                
 //                InputStream IS = http.getInputStream();
