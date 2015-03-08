@@ -1,6 +1,7 @@
 package com.bearpluspie.letsdoit;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,16 +28,16 @@ public class ShowMapActivity extends Activity{
 		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
 		
 		if(map != null){
-			Marker Tucson = map.addMarker(new MarkerOptions()
+			/*Marker Tucson = */map.addMarker(new MarkerOptions()
 			.position(TUCSON)
 			.title("Tucson")
 			.snippet("Tucson is lush"));
-			Marker Phoenix = map.addMarker(new MarkerOptions()
+			/*Marker Phoenix = */map.addMarker(new MarkerOptions()
 			.position(PHOENIX)
 			.title("Phoenix title")
 			.snippet("Phoenix has lots of asphalt")
-			.icon(BitmapDescriptorFactory
-					.fromResource(R.drawable.ic_launcher)));
+			/*.icon(BitmapDescriptorFactory
+					.fromResource(R.drawable.ic_launcher))*/);
 			
 			//including some animation
 			//Move the camera instantly to Tucson with a zoom of 15.
@@ -45,20 +46,32 @@ public class ShowMapActivity extends Activity{
 			// Zoom in, animating the camera.
 			map.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
 		}
+		/*
+		 * for all rows in the db,
+		 * 		map.addMarker(new MarkerOptions()
+		 * 		.position(new LatLng(coordinate1, coordinate2))
+		 * 		.title(name)
+		 * 		.snippet(description);
+		 */
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.mainmenu, menu);
+		inflater.inflate(R.menu.map_menu, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// TODO Auto-generated method stub
-		return super.onOptionsItemSelected(item);
+		super.onOptionsItemSelected(item);
+		int id = item.getItemId();
+		if(id == R.id.backToMain)
+			startActivity(new Intent(getApplicationContext(), MainActivity.class));
+		else if(id == R.id.showList)
+			startActivity(new Intent(getApplicationContext(), AllHikesList.class));
+		return true;
 	}
 	
 	

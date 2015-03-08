@@ -464,10 +464,10 @@ containing a value of this type.
         public static final int powered_by_google_light=0x7f020020;
     }
     public static final class id {
-        public static final int action_settings=0x7f070018;
+        public static final int action_settings=0x7f070019;
         public static final int adjust_height=0x7f070002;
         public static final int adjust_width=0x7f070001;
-        public static final int backToMain=0x7f070019;
+        public static final int backToMain=0x7f07001a;
         public static final int book_now=0x7f070012;
         public static final int buyButton=0x7f07000c;
         public static final int buy_now=0x7f070011;
@@ -487,7 +487,8 @@ containing a value of this type.
         public static final int sandbox=0x7f07000a;
         public static final int satellite=0x7f070004;
         public static final int selectionDetails=0x7f07000d;
-        public static final int showList=0x7f07001a;
+        public static final int showList=0x7f07001b;
+        public static final int showMap=0x7f070018;
         public static final int strict_sandbox=0x7f07000b;
         public static final int terrain=0x7f070005;
         public static final int wrap_content=0x7f07000f;
@@ -500,8 +501,10 @@ containing a value of this type.
         public static final int show_map_layout=0x7f030001;
     }
     public static final class menu {
-        public static final int main=0x7f0b0000;
-        public static final int mainmenu=0x7f0b0001;
+        public static final int hikesmenu=0x7f0b0000;
+        public static final int main=0x7f0b0001;
+        public static final int mainmenu=0x7f0b0002;
+        public static final int map_menu=0x7f0b0003;
     }
     public static final class raw {
         public static final int gtm_analytics=0x7f040000;

@@ -288,4 +288,12 @@ public class DataHelper {
 //		}
 //		return list;
 //	}
+	
+	public List<String> selectHikesDummy(){
+		List<String> list = new ArrayList<String>();
+		list.add("Tucson Hike");
+		list.add("Phoenix Hike");
+		list.add("Flagstaff Hike");
+		return list;
+	}
 }
